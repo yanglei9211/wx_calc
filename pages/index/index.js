@@ -2,6 +2,8 @@ Page({
   data: {
     focus: false,
     inputValue: '',
+    ld_index: 0,
+
     value_a: 0,
     value_h: 0,
     value_w: 0,
@@ -20,6 +22,9 @@ Page({
     ts_p: 0,
     ts_w: 0,
 
+    ld_items: [
+      "000", "111", "222", "333"
+    ],
     checkboxItems: [
       { name: '男', value: '0' },
       { name: '女', value: '1' },
@@ -111,6 +116,29 @@ Page({
       wx.hideKeyboard()
     }
   },
+
+  bindPickerChange: function (e) {
+    console.log('picker current', e.detail.value)
+    console.log(typeof(e.detail.value))
+    this.setData({ld_index: e.detail.value})
+  },
+
+  valid_input_h: function(h) {
+      
+  },
+
+  valid_input_w: function(w) {
+
+  },
+
+  valid_input_a: function(a) {
+
+  },
+
+  valid_input_ld: function(ld) {
+
+  },
+
   set_response: function (data_map) {
     console.log(data_map)
     if (data_map == 0) {
