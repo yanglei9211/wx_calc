@@ -2,13 +2,15 @@ Page({
   data: {
     focus: false,
     inputValue: '',
-    ld_index: 0,
-
     value_a: 0,
     value_h: 0,
     value_w: 0,
     value_ld: 0,
     total_k: 0,
+
+    need_gf_w: 0,
+    need_gf_w2: 0,
+    need_p: 0,
 
     db_k: 0,
     db_p: 0,
@@ -22,23 +24,47 @@ Page({
     ts_p: 0,
     ts_w: 0,
 
-    ld_items: [
-      "000", "111", "222", "333"
-    ],
+    h_items: [[0, 1, 2], Array.from({length: 100}, (x,i) => i)],
+    w_items: [['', 1, 2], Array.from({length: 100}, (x,i) => i)],
+    a_items: [[4, 5, 6, 7, 8, 9], Array.from({length: 10}, (x,i) => i)],
+    ld_items: ["卧床", "轻体力", "中体力", "重体力"],
+    h_picker_index: [1, 60],
+    w_picker_index: [0, 80],
+    a_picker_index: [0, 0],
+    ld_picker_index: 1,
     checkboxItems: [
       { name: '男', value: '0' },
       { name: '女', value: '1' },
     ],
     value_sex: 0,
-    listData:[
-      {"code":"01","text":"text1","type":"type1"},
-      {"code":"02","text":"text2","type":"type2"},
-      {"code":"03","text":"text3","type":"type3"},
-      {"code":"04","text":"text4","type":"type4"},
-      {"code":"05","text":"text5","type":"type5"},
-      {"code":"06","text":"text6","type":"type6"},
-      {"code":"07","text":"text7","type":"type7"}
-      ]
+  },
+
+
+  bind_h_picker_change: function (e) {
+    this.setData({
+      h_picker_index: e.detail.value
+    })
+    this.calc_value(e)
+  },
+  bind_w_picker_change: function(e) {
+    this.setData({
+      w_picker_index: e.detail.value
+    })
+    this.calc_value(e)
+  },
+
+  bind_a_picker_change: function(e) {
+    this.setData({
+      a_picker_index: e.detail.value
+    })
+    this.calc_value(e)
+  },
+
+  bind_ld_picker_change: function(e) {
+    this.setData({
+      ld_picker_index: e.detail.value
+    })
+    this.calc_value(e)
   },
 
   checkboxChange: function (e) {
@@ -116,27 +142,48 @@ Page({
       wx.hideKeyboard()
     }
   },
-
-  bindPickerChange: function (e) {
-    console.log('picker current', e.detail.value)
-    console.log(typeof(e.detail.value))
-    this.setData({ld_index: e.detail.value})
+  calc_value: function(e) {
+    var h = this.collect_input_h(e)
+    var w = this.collect_input_w(e)
+    var a = this.collect_input_a(e)
+    var ld = this.collect_input_ld(e)
+    // var input = {'h': h, 'w': w, 'a': a, 'ld': ld}
+    var res = calc_total(h, w, a, ld)
+    var ts_w = res['ts_w']
+    var need_res = calc_need(ts_w)
+    this.set_response(res)
+    this.set_need_response(need_res)
   },
 
-  valid_input_h: function(h) {
-      
+  collect_input_h: function(e) {
+    var h_items = this.data['h_items']
+    var h_index = this.data['h_picker_index']
+    var h = h_items[0][h_index[0]] + h_items[1][h_index[1]] / 100.0
+    // console.log('h: ', h)
+    return h
   },
 
-  valid_input_w: function(w) {
-
+  collect_input_w: function(e) {
+    var w_items = this.data['w_items']
+    var w_index = this.data['w_picker_index']
+    var w = w_items[0][w_index[0]] * 10 + w_items[1][w_index[1]]
+    // console.log('w: ', w)
+    return w
   },
 
-  valid_input_a: function(a) {
-
+  collect_input_a: function(e) {
+    var a_items = this.data['a_items']
+    var a_index = this.data['a_picker_index']
+    var age = a_items[0][a_index[0]] * 10 + a_items[1][a_index[1]]
+    // console.log('age: ', age)
+    return age
   },
 
-  valid_input_ld: function(ld) {
-
+  collect_input_ld: function(e) {
+    var ld_index = Number(this.data['ld_picker_index'])
+    var ld = ld_index + 1
+    // console.log('ld: ', ld)
+    return ld
   },
 
   set_response: function (data_map) {
@@ -156,8 +203,40 @@ Page({
       ts_p: Math.round(data_map['ts_p'] * 100),
       ts_w: data_map['ts_w'],
     })
+  },
+
+  set_need_response: function(data_map) {
+    console.log(data_map)
+    if (data_map == 0) {
+      return
+    }
+    this.setData({
+      need_gf_w: data_map['gf_w'],
+      need_gf_w2: data_map['gf_w2'],
+      need_p: data_map['p'],
+    })
   }
 })
+
+function calc_need(ts_w) {
+    if (ts_w == 0) {
+      return 0
+    }
+    var zao_ts_w = ts_w * 0.2
+    var wu_ts_w = ts_w * 0.4
+    var wan_ts_w = ts_w * 0.4
+    var zao_gf_w = zao_ts_w * 1.18
+    var wu_gf_w = wu_ts_w * 1.18
+    var wan_gf_w = wan_ts_w * 1.18
+    var gf_w = zao_gf_w + wu_gf_w + wan_gf_w
+    var gf_w2 = gf_w / 50.0
+    var p = gf_w * 0.03
+    gf_w = gf_w.toFixed(1)
+    gf_w2 = gf_w2.toFixed(1)
+    p = p.toFixed(2)
+    var res = {'gf_w': gf_w, 'gf_w2': gf_w2, 'p': p}
+    return res
+}
 
 function calc_total(h, w, age, ld) {
   if (h == 0 || w == 0 || ld==0 || age == 0) {
@@ -199,13 +278,13 @@ function calc_total(h, w, age, ld) {
     }
 
     total_k = (yy + hd) * h2 * p2
-    total_k = total_k.toFixed(1)
+    
     console.log(total_k)
     k3 = total_k * 0.2 / 4.0
 
     var db_w, db_k, zf_k, ts_k, db_p, zf_p, ts_p, zf_w, ts_w, res
     db_w = Math.max(h3, k3)
-    db_w = db_w.toFixed(1)
+    
     db_k = db_w * 4
     zf_k = total_k * 0.25
     ts_k = total_k - db_k - zf_k
@@ -214,10 +293,21 @@ function calc_total(h, w, age, ld) {
     zf_p = 0.25
     // ts_p = ts_k / total_k
     ts_p = 1 - db_p - zf_p
-
     zf_w = zf_k / 9.0
-    zf_w = zf_w.toFixed(1)
     ts_w = ts_k / 4.0
+    
+
+    total_k = total_k.toFixed(1)
+    db_k = db_k.toFixed(1)
+    db_p = db_p.toFixed(1)
+    db_w = db_w.toFixed(1)
+    
+    zf_k = zf_k.toFixed(1)
+    zf_p = zf_p.toFixed(1)
+    zf_w = zf_w.toFixed(1)
+
+    ts_k = ts_k.toFixed(1)
+    ts_p = ts_p.toFixed(1)
     ts_w = ts_w.toFixed(1)
 
     res = {

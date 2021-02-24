@@ -1,117 +1,96 @@
 <view class="page-body">
 
-  <!-- <view class="page-section"> -->
-    <!-- <view class="weui-cells__title">计算结果：{{value_w + value_h + value_a}}</view> -->
-    <!-- <view class="weui-cells__title" wx:if="{{value_sex == 0}}"> 计算结果: {{value_w + value_a + value_h}} </view> -->
-    <!-- <view class="weui-cells__title" wx:if="{{value_sex == 1}}"> 计算结果: {{value_w * value_a * value_h}} </view> -->
-  <!-- </view> -->
-
-  
-
- <!-- <block wx:for="{{listData}}" wx:key="{[code]}">
- <view class="tr bg-g" wx:if="{{index % 2 == 0}}">
- <view class="td">{{item.code}}</view>
- <view class="td">{{item.text}}</view>
- <view class="td">{{item.type}}</view>
- </view>
- <view class="tr" wx:else>
- <view class="td">{{item.code}}</view>
- <view class="td">{{item.text}}</view>
- <view class="td">{{item.type}}</view>
- </view>
- </block>
-</view> -->
-
   <view class="page-section">
-    <view class="weui-cell__hd weui-cell__hd_in-select-after">
-        <view class="weui-label">国家/地区</view>
-    </view>
-    <picker bindchange="bindPickerChange" value="{{index}}" range="{{ld_items}}">
-      <view class="picker">
-        {{ld_items[ld_index]}}
-      </view>
-    </picker>
-  </view>
-
-  
-
-  <view class="page-section">
-    <view class="weui-cells__title">h</view>
-    <view class="weui-cells weui-cells_after-title">
-      <view class="weui-cell weui-cell_input">
-        <input id='value_h'
-        class="weui-input"  maxlength="10" type="number"
-        bindinput="bind_vh" placeholder="0"/>
-      </view>
-    </view>
-  </view>
-
-  <view class="page-section">
-    <view class="weui-cells__title">w</view>
-    <view class="weui-cells weui-cells_after-title">
-      <view class="weui-cell weui-cell_input">
-        <input id="value_w"
-         class="weui-input"  maxlength="10" type="number"
-        bindinput="bind_vw" placeholder="0"/>
-      </view>
-    </view>
-  </view>
-
-  <view class="page-section">
-    <view class="weui-cells__title">a</view>
-    <view class="weui-cells weui-cells_after-title">
-      <view class="weui-cell weui-cell_input">
-        <input id="value_a" 
-        class="weui-input"  maxlength="10" type="number"
-        bindinput="bind_va" placeholder="0"/>
-      </view>
-    </view>
-  </view>
-
-  <view class="page-section">
-    <view class="weui-cells__title">ld</view>
-    <view class="weui-cells weui-cells_after-title">
-      <view class="weui-cell weui-cell_input">
-        <input id="value_ld" 
-        class="weui-input"  maxlength="10" type="number"
-        bindinput="bind_vld" placeholder="0"/>
-      </view>
-    </view>
-  </view>
-
-  <view class="page-section">
-    <picker bindchange="bindPickerChange" value="{{index}}" range="{{ld_items}}">
-    <view class="picker">
-      当前选择：{{ld_items[ld_index]}}
-    </view>
-  </picker>
-  </view>
-
-  <!-- <view class="page-section">
-  <view class="weui-cells weui-cells_after-title">
-      <checkbox-group class="weui-flex" bindchange="checkboxChange">
-        <label class="weui-cell weui-check__label weui-flex__item" wx:for="{{checkboxItems}}" wx:key="value">
-          <checkbox class="weui-check" value="{{item.value}}" checked="{{item.checked}}" />
-          <view class="weui-cell__hd weui-check__hd_in-checkbox">
-            <icon class="weui-icon-checkbox_circle" type="circle" size="23" wx:if="{{!item.checked}}"></icon>
-            <icon class="weui-icon-checkbox_success" type="success" size="23" wx:if="{{item.checked}}"></icon>
+    <mp-cells title="基本情况">
+      <mp-cell prop="h" title="身高" ext-class="">
+        <picker mode="multiSelector" class="picker-input" bindchange="bind_h_picker_change"
+         value="{{h_picker_index}}" range="{{h_items}}">
+          <view class="picker">
+            {{h_items[0][h_picker_index[0]]}}.{{h_items[1][h_picker_index[1]]}} (米)
           </view>
-          <view class="weui-cell__bd">{{item.name}}</view>
-        </label>
-      </checkbox-group>
-    </view>
-  </view> -->
+        </picker>
+      </mp-cell>
+      <mp-cell prop="w" title="体重" ext-class=" weui-cell_vcode">
+        <picker mode="multiSelector" class="picker-input" bindchange="bind_w_picker_change" 
+        value="{{w_picker_index}}" range="{{w_items}}">
+          <view class="picker">
+            {{w_items[0][w_picker_index[0]]}}{{w_items[1][w_picker_index[1]]}} (千克)
+          </view>
+        </picker>
+      </mp-cell>
+      <mp-cell prop="a" title="年龄" ext-class="weui-cell_vcode">
+        <picker mode="multiSelector" class="picker-input" bindchange="bind_a_picker_change"
+        value="{{a_picker_index}}" range="{{a_items}}">
+          <view class="picker">
+            {{a_items[0][a_picker_index[0]]}} {{a_items[1][a_picker_index[1]]}} (岁)
+          </view>
+        </picker>
+      </mp-cell>
+      <mp-cell prop="ld" title="劳动强度" ext-class="weui-cell_vcode">
+        <picker class="picker-input" bindchange="bind_ld_picker_change" value="{{ld_picker_index}}" range="{{ld_items}}">
+          <view class="picker">
+            {{ld_items[ld_picker_index]}}
+          </view>
+        </picker>
+      </mp-cell>
+    </mp-cells>
+    <mp-cells title="每日热能营养供给量">
+      <view class="table">
+        <view class="tr bg-w">
+          <view class="th">类别</view>
+          <view class="th">需求量(千卡)</view>
+          <view class="th">占比</view>
+          <view class="th ">重量(克)</view>
+        </view>
 
-  <!-- <view class="page-section">
-    <view class="weui-cells__title">数字输入的input</view>
-    <view class="weui-cells weui-cells_after-title">
-      <view class="weui-cell weui-cell_input">
-        <input class="weui-input" type="number" placeholder="这是一个数字输入框" />
+        <view class="tr bg-g">
+          <view class="td">总热能</view>
+          <view class="td">{{total_k}}</view>
+          <view class="td"></view>
+          <view class="td"></view>
+        </view>
+
+        <view class="tr">
+          <view class="td">蛋白质</view>
+          <view class="td">{{db_k}}</view>
+          <view class="td">{{db_p}}%</view>
+          <view class="td">{{db_w}}</view>
+        </view>
+
+        <view class="tr bg-g">
+          <view class="td">脂肪</view>
+          <view class="td">{{zf_k}}</view>
+          <view class="td">{{zf_p}}%</view>
+          <view class="td">{{zf_w}}</view>
+        </view>
+
+        <view class="tr">
+          <view class="td">碳水化合物</view>
+          <view class="td">{{ts_k}}</view>
+          <view class="td">{{ts_p}}%</view>
+          <view class="td">{{ts_w}}</view>
+        </view>
+  </view>
+    </mp-cells>
+      
+    <mp-cells title="每日主食需求量">
+      <view class="table">
+        <view class="tr bg-g">
+          <view class="td">营养平衡一号特膳面粉（干粉）</view>
+          <view class="td">{{need_gf_w}}(克)</view>
+          <view class="td">{{need_gf_w2}}(两)</view>
+        </view>
+
+        <view class="tr">
+          <view class="td">主食价格</view>
+          <view class="td">500克/15元</view>
+          <view class="td">{{need_p}}(元)</view>
+        </view>        
       </view>
-    </view>
-  </view> -->
+    </mp-cells>
+  
 
-  <view class="table">
+  <!-- <view class="table">
  <view class="tr bg-w">
   <view class="th">1</view>
  <view class="th">2</view>
@@ -145,7 +124,7 @@
   <view class="td">{{ts_k}}</view>
   <view class="td">{{ts_p}}%</view>
   <view class="td">{{ts_w}}</view>
- </view>
+ </view> -->
 
 </view>
   

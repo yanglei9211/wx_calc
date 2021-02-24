@@ -34,3 +34,6 @@
   height: 3rem;
   align-items: center;
  }
+ .picker-input{
+   float: right;
+ }
