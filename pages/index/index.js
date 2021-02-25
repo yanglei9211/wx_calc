@@ -293,21 +293,22 @@ function calc_total(h, w, age, ld) {
     zf_p = 0.25
     // ts_p = ts_k / total_k
     ts_p = 1 - db_p - zf_p
+    console.log(ts_p, db_p, zf_p)
     zf_w = zf_k / 9.0
     ts_w = ts_k / 4.0
     
 
     total_k = total_k.toFixed(1)
     db_k = db_k.toFixed(1)
-    db_p = db_p.toFixed(1)
+    // db_p = db_p.toFixed(1)
     db_w = db_w.toFixed(1)
     
     zf_k = zf_k.toFixed(1)
-    zf_p = zf_p.toFixed(1)
+    // zf_p = zf_p.toFixed(1)
     zf_w = zf_w.toFixed(1)
 
     ts_k = ts_k.toFixed(1)
-    ts_p = ts_p.toFixed(1)
+    // ts_p = ts_p.toFixed(1)
     ts_w = ts_w.toFixed(1)
 
     res = {
